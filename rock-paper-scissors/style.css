@@ -1,0 +1,45 @@
+/* General styling */
+body {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  background-color: #fdf6e3; /* Pastel beige */
+  color: #333;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Heading styles */
+h2 {
+  margin: 20px 0;
+  font-size: 1.5rem;
+  color: #6c757d; /* Soft gray */
+}
+
+/* Button styles */
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  background-color: #ffd1dc; /* Pastel pink */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #ff9aa2; /* Slightly brighter pastel pink */
+}
+
+button:active {
+  background-color: #ff6f91; /* Deeper pastel pink */
+  transform: scale(0.95);
+}
+
+/* Highlight choices */
+#computer-choice, #user-choice, #result {
+  color: #69a297; /* Pastel teal */
+  font-weight: bold;
+}
