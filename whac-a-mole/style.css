@@ -1,0 +1,85 @@
+body {
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  background-color: #fdf6e4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: #ffb3ba;
+  font-size: 2.5em;
+}
+
+h3 {
+  color: #85e3ff;
+  margin: 10px;
+  font-size: 1.2em;
+}
+
+button {
+  background-color: #ffb3ba;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 20px 0;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  background-color: #ff8a80;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.grid {
+  width: 620px;
+  height: 620px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 auto;
+  gap: 10px;
+  background-color: #ffffff;
+  border: 4px solid #ffb3ba;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.square {
+  height: 180px;
+  width: 180px;
+  border: 4px solid #d1c4e9;
+  background-color: #e8f5e9;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.square:hover {
+  background-color: #c8e6c9;
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.mole {
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  background-image: url("image/mole.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.3s;
+}
+
+.mole:hover {
+  transform: scale(1.2);
+}
