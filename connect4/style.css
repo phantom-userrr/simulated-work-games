@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7fb;
+  font-family: Arial, sans-serif;
+}
+
+h3 {
+  color: #2c3e50;
+  margin: 10px 0;
+}
+
+.grid {
+  width: 455px; /* Adjusted to fit 7 circles perfectly */
+  height: 390px; /* Adjusted to fit 6 visible rows */
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #34495e;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.grid div {
+  width: 57px;
+  height: 57px;
+  margin: 4px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+/* Hide bottom row */
+.grid div:nth-child(n + 43) {
+  display: none;
+}
+
+/* Player colors - using !important to ensure they override the white background */
+.grid div.player-one {
+  background-color: #ff0000 !important;
+}
+
+.grid div.player-two {
+  background-color: #0000ff !important;
+}
+
+#current-player {
+  font-weight: bold;
+}
+
+#result {
+  height: 30px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #2c3e50;
+}
