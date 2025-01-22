@@ -1,0 +1,67 @@
+/* Centering the content on the page */
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #121212; /* Dark background for contrast */
+  color: #ffffff; /* White text */
+}
+
+/* Styling the score display */
+h1.results {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffcc00; /* Bright yellow for visibility */
+}
+
+/* Centering the grid */
+.grid {
+  width: 300px;
+  height: 300px;
+  border: 2px solid #ffffff; /* White border for better visibility */
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto; /* Center horizontally */
+  background-color: #000000; /* Black background for the grid */
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Individual cells in the grid */
+.grid div {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Styling invaders */
+.invader {
+  background-color: purple;
+  border-radius: 10px;
+  box-shadow: 0 0 6px 2px rgba(128, 0, 128, 0.8); /* Glow effect */
+}
+
+/* Styling the shooter */
+.shooter {
+  background-color: green;
+  box-shadow: 0 0 6px 2px rgba(0, 255, 0, 0.8); /* Glow effect */
+}
+
+/* Styling lasers */
+.laser {
+  background-color: orange;
+  box-shadow: 0 0 6px 2px rgba(255, 165, 0, 0.8); /* Glow effect */
+}
+
+/* Explosion effect */
+.boom {
+  background-color: red;
+  box-shadow: 0 0 6px 2px rgba(255, 0, 0, 0.8); /* Glow effect */
+}
