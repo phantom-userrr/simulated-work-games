@@ -2,7 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const squares = document.querySelectorAll(".grid div");
   const result = document.querySelector("#result");
   const displayCurrentPlayer = document.querySelector("#current-player");
+  const timerDisplay = document.createElement("div");
+  timerDisplay.id = "timer";
+  displayCurrentPlayer.parentElement.appendChild(timerDisplay);
+
   let currentPlayer = 1;
+  let gameActive = true;
+  let turnTimer;
+  const TURN_TIME = 15; // seconds
+  const scores = { playerOne: 0, playerTwo: 0 };
 
   const winningArrays = [
     [0, 1, 2, 3],
@@ -76,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     [13, 20, 27, 34],
   ];
 
+  // Enhanced checkBoard function with game-ending logic
   function checkBoard() {
     for (let y = 0; y < winningArrays.length; y++) {
       const square1 = squares[winningArrays[y][0]];
@@ -90,6 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
         square4.classList.contains("player-one")
       ) {
         result.innerHTML = "Player One Wins!";
+        scores.playerOne++;
+        gameActive = false;
+        stopTimer();
+        return true;
       }
 
       if (
@@ -99,29 +112,227 @@ document.addEventListener("DOMContentLoaded", () => {
         square4.classList.contains("player-two")
       ) {
         result.innerHTML = "Player Two Wins!";
+        scores.playerTwo++;
+        gameActive = false;
+        stopTimer();
+        return true;
       }
+    }
+    return false;
+  }
+
+  // AI Move Selection Logic
+  function selectAIMove() {
+    const availableColumns = [];
+
+    // First, check for winning move
+    for (let col = 0; col < 7; col++) {
+      const potentialMove = findAvailableRowInColumn(col);
+      if (potentialMove !== -1) {
+        if (wouldMoveWin(potentialMove, 2)) {
+          return col;
+        }
+      }
+    }
+
+    // Then, block player's potential winning move
+    for (let col = 0; col < 7; col++) {
+      const potentialMove = findAvailableRowInColumn(col);
+      if (potentialMove !== -1) {
+        if (wouldMoveWin(potentialMove, 1)) {
+          return col;
+        }
+      }
+    }
+
+    // If no strategic move, choose randomly from available columns
+    for (let col = 0; col < 7; col++) {
+      if (findAvailableRowInColumn(col) !== -1) {
+        availableColumns.push(col);
+      }
+    }
+
+    return availableColumns[
+      Math.floor(Math.random() * availableColumns.length)
+    ];
+  }
+
+  // Helper function to find available row in a column
+  function findAvailableRowInColumn(col) {
+    for (let row = 5; row >= 0; row--) {
+      const index = row * 7 + col;
+      if (!squares[index].classList.contains("taken")) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  // Check if a move would create a win
+  function wouldMoveWin(moveIndex, player) {
+    squares[moveIndex].classList.add("taken");
+    squares[moveIndex].classList.add(
+      player === 1 ? "player-one" : "player-two",
+    );
+
+    const wouldWin = checkBoard();
+
+    // Revert the temporary move
+    squares[moveIndex].classList.remove("taken");
+    squares[moveIndex].classList.remove(
+      player === 1 ? "player-one" : "player-two",
+    );
+
+    return wouldWin;
+  }
+
+  // Timer Management
+  function startTimer() {
+    let timeLeft = TURN_TIME;
+    timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+
+    turnTimer = setInterval(() => {
+      timeLeft--;
+      timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+
+      if (timeLeft <= 0) {
+        switchPlayer();
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(turnTimer);
+    timerDisplay.textContent = "";
+  }
+
+  function switchPlayer() {
+    stopTimer();
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    displayCurrentPlayer.innerHTML = currentPlayer;
+
+    // If AI's turn, make a move
+    if (currentPlayer === 2) {
+      const aiColumn = selectAIMove();
+      triggerColumnClick(aiColumn);
+    }
+
+    startTimer();
+  }
+
+  // Simulate column click for AI move
+  function triggerColumnClick(col) {
+    const clickIndex = findAvailableRowInColumn(col);
+    if (clickIndex !== -1) {
+      squares[clickIndex].classList.add("taken");
+      squares[clickIndex].classList.add("player-two");
+      squares[clickIndex].classList.add("falling-piece");
+
+      setTimeout(() => {
+        squares[clickIndex].classList.remove("falling-piece");
+      }, 500);
+
+      checkBoard();
+      switchPlayer();
     }
   }
 
+  // Initialize game setup
+  function initializeGame() {
+    // Reset board
+    squares.forEach((square) => {
+      square.classList.remove("taken", "player-one", "player-two");
+    });
+
+    result.innerHTML = "";
+    gameActive = true;
+    currentPlayer = 1;
+    displayCurrentPlayer.innerHTML = currentPlayer;
+
+    startTimer();
+  }
+
+  // Add click handlers with enhanced logic
   for (let i = 0; i < squares.length; i++) {
     squares[i].onclick = () => {
+      if (!gameActive) {
+        initializeGame();
+        return;
+      }
+
+      if (currentPlayer !== 1) return; // Prevent player moves during AI turn
+
       if (
         squares[i + 7].classList.contains("taken") &&
         !squares[i].classList.contains("taken")
       ) {
-        if (currentPlayer == 1) {
-          squares[i].classList.add("taken");
-          squares[i].classList.add("player-one");
-          currentPlayer = 2;
-          displayCurrentPlayer.innerHTML = currentPlayer;
-        } else if (currentPlayer == 2) {
-          squares[i].classList.add("taken");
-          squares[i].classList.add("player-two");
-          currentPlayer = 1;
-          displayCurrentPlayer.innerHTML = currentPlayer;
+        squares[i].classList.add("taken");
+        squares[i].classList.add("player-one");
+        squares[i].classList.add("falling-piece");
+
+        setTimeout(() => {
+          squares[i].classList.remove("falling-piece");
+        }, 500);
+
+        if (!checkBoard()) {
+          switchPlayer();
         }
-      } else alert("cant go here");
-      checkBoard();
+      } else {
+        alert("Can't place piece here!");
+      }
     };
   }
+
+  // Updated AI move selection logic
+  function selectAIMove() {
+    const availableColumns = [];
+
+    // Check for winning move
+    for (let col = 0; col < 7; col++) {
+      const potentialMove = findAvailableRowInColumn(col);
+      if (potentialMove !== -1 && wouldMoveWin(potentialMove, 2)) {
+        return col;
+      }
+    }
+
+    // Block player's potential winning move
+    for (let col = 0; col < 7; col++) {
+      const potentialMove = findAvailableRowInColumn(col);
+      if (potentialMove !== -1 && wouldMoveWin(potentialMove, 1)) {
+        return col;
+      }
+    }
+
+    // Choose random available column
+    for (let col = 0; col < 7; col++) {
+      if (findAvailableRowInColumn(col) !== -1) {
+        availableColumns.push(col);
+      }
+    }
+    return availableColumns[
+      Math.floor(Math.random() * availableColumns.length)
+    ];
+  }
+
+  // Add 500ms delay before AI move
+  function triggerColumnClick(col) {
+    setTimeout(() => {
+      const clickIndex = findAvailableRowInColumn(col);
+      if (clickIndex !== -1) {
+        squares[clickIndex].classList.add(
+          "taken",
+          "player-two",
+          "falling-piece",
+        );
+        setTimeout(() => {
+          squares[clickIndex].classList.remove("falling-piece");
+        }, 500);
+        checkBoard();
+        switchPlayer();
+      }
+    }, 500);
+  }
+
+  // Start the first turn
+  startTimer();
 });
